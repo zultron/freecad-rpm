@@ -1,0 +1,238 @@
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Fem/App/HypothesisPy.cpp FreeCAD-0.12.5284/src/Mod/Fem/App/HypothesisPy.cpp
+--- FreeCAD-0.12.5284.orig/src/Mod/Fem/App/HypothesisPy.cpp	2012-05-24 19:42:01.240612805 -0700
++++ FreeCAD-0.12.5284/src/Mod/Fem/App/HypothesisPy.cpp	2012-05-24 20:20:50.307192529 -0700
+@@ -85,15 +85,15 @@
+     SMESH_HypothesisPy<T>::behaviors().supportSetattr();
+     SMESH_HypothesisPy<T>::behaviors().type_object()->tp_new = &PyMake;
+ 
+-    add_varargs_method("setLibName", &SMESH_HypothesisPy<T>::setLibName, "setLibName(String)");
+-    add_varargs_method("getLibName", &SMESH_HypothesisPy<T>::getLibName, "String getLibName()");
+-    add_varargs_method("setParameters", &SMESH_HypothesisPy<T>::setParameters, "setParameters(String)");
+-    add_varargs_method("getParameters", &SMESH_HypothesisPy<T>::getParameters, "String getParameters()");
+-    add_varargs_method("setLastParameters", &SMESH_HypothesisPy<T>::setLastParameters, "setLastParameters(String)");
+-    add_varargs_method("getLastParameters", &SMESH_HypothesisPy<T>::getLastParameters, "String getLastParameters()");
+-    add_varargs_method("clearParameters", &SMESH_HypothesisPy<T>::clearParameters, "clearParameters()");
+-    add_varargs_method("isAuxiliary", &SMESH_HypothesisPy<T>::isAuxiliary, "Bool isAuxiliary()");
+-    add_varargs_method("setParametersByMesh", &SMESH_HypothesisPy<T>::setParametersByMesh, "setParametersByMesh(Mesh,Shape)");
++    SMESH_HypothesisPy::add_varargs_method("setLibName", &SMESH_HypothesisPy<T>::setLibName, "setLibName(String)");
++    SMESH_HypothesisPy::add_varargs_method("getLibName", &SMESH_HypothesisPy<T>::getLibName, "String getLibName()");
++    SMESH_HypothesisPy::add_varargs_method("setParameters", &SMESH_HypothesisPy<T>::setParameters, "setParameters(String)");
++    SMESH_HypothesisPy::add_varargs_method("getParameters", &SMESH_HypothesisPy<T>::getParameters, "String getParameters()");
++    SMESH_HypothesisPy::add_varargs_method("setLastParameters", &SMESH_HypothesisPy<T>::setLastParameters, "setLastParameters(String)");
++    SMESH_HypothesisPy::add_varargs_method("getLastParameters", &SMESH_HypothesisPy<T>::getLastParameters, "String getLastParameters()");
++    SMESH_HypothesisPy::add_varargs_method("clearParameters", &SMESH_HypothesisPy<T>::clearParameters, "clearParameters()");
++    SMESH_HypothesisPy::add_varargs_method("isAuxiliary", &SMESH_HypothesisPy<T>::isAuxiliary, "Bool isAuxiliary()");
++    SMESH_HypothesisPy::add_varargs_method("setParametersByMesh", &SMESH_HypothesisPy<T>::setParametersByMesh, "setParametersByMesh(Mesh,Shape)");
+     Base::Interpreter().addType(SMESH_HypothesisPy<T>::behaviors().type_object(),
+         module,SMESH_HypothesisPy<T>::behaviors().getName());
+ }
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2Filtered.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2Filtered.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2Filtered.inl	2012-05-24 19:42:01.191614365 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2Filtered.inl	2012-05-24 20:20:50.307192529 -0700
+@@ -55,7 +55,7 @@
+     Real fLen1 = Math<Real>::Sqrt(fX1*fX1 + fY1*fY1);
+     Real fScaledUncertainty = m_fUncertainty*fLen0*fLen1;
+ 
+-    Real fDet2 = Det2(fX0,fY0,fX1,fY1);
++    Real fDet2 = this->Det2(fX0,fY0,fX1,fY1);
+     if (Math<Real>::FAbs(fDet2) >= fScaledUncertainty)
+     {
+         return (fDet2 > (Real)0.0 ? +1 : (fDet2 < (Real)0.0 ? -1 : 0));
+@@ -93,7 +93,7 @@
+     Real fLen2 = Math<Real>::Sqrt(fD2x*fD2x + fD2y*fD2y + fZ2*fZ2);
+     Real fScaledUncertainty = m_fUncertainty*fLen0*fLen1*fLen2;
+ 
+-    Real fDet3 = Det3(fD0x,fD0y,fZ0,fD1x,fD1y,fZ1,fD2x,fD2y,fZ2);
++    Real fDet3 = this->Det3(fD0x,fD0y,fZ0,fD1x,fD1y,fZ1,fD2x,fD2y,fZ2);
+     if (Math<Real>::FAbs(fDet3) >= fScaledUncertainty)
+     {
+         return (fDet3 < (Real)0.0 ? 1 : (fDet3 > (Real)0.0 ? -1 : 0));
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2.inl	2012-05-24 19:42:01.193614301 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2.inl	2012-05-24 20:20:50.307192529 -0700
+@@ -65,7 +65,7 @@
+     Real fX1 = rkV1[0] - rkV0[0];
+     Real fY1 = rkV1[1] - rkV0[1];
+ 
+-    Real fDet2 = Det2(fX0,fY0,fX1,fY1);
++    Real fDet2 = this->Det2(fX0,fY0,fX1,fY1);
+     return (fDet2 > (Real)0.0 ? +1 : (fDet2 < (Real)0.0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -129,7 +129,7 @@
+     Real fZ0 = fS0x*fD0x + fS0y*fD0y;
+     Real fZ1 = fS1x*fD1x + fS1y*fD1y;
+     Real fZ2 = fS2x*fD2x + fS2y*fD2y;
+-    Real fDet3 = Det3(fD0x,fD0y,fZ0,fD1x,fD1y,fZ1,fD2x,fD2y,fZ2);
++    Real fDet3 = this->Det3(fD0x,fD0y,fZ0,fD1x,fD1y,fZ1,fD2x,fD2y,fZ2);
+     return (fDet3 < (Real)0.0 ? 1 : (fDet3 > (Real)0.0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2Int64.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2Int64.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2Int64.inl	2012-05-24 19:42:01.194614269 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2Int64.inl	2012-05-24 20:20:50.307192529 -0700
+@@ -42,7 +42,7 @@
+     Integer64 iX1 = (Integer64)rkV1[0] - (Integer64)rkV0[0];
+     Integer64 iY1 = (Integer64)rkV1[1] - (Integer64)rkV0[1];
+ 
+-    Integer64 iDet2 = Det2(iX0,iY0,iX1,iY1);
++    Integer64 iDet2 = this->Det2(iX0,iY0,iX1,iY1);
+     return (iDet2 > 0 ? +1 : (iDet2 < 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -74,7 +74,7 @@
+     Integer64 iZ0 = iS0x*iD0x + iS0y*iD0y;
+     Integer64 iZ1 = iS1x*iD1x + iS1y*iD1y;
+     Integer64 iZ2 = iS2x*iD2x + iS2y*iD2y;
+-    Integer64 iDet3 = Det3(iD0x,iD0y,iZ0,iD1x,iD1y,iZ1,iD2x,iD2y,iZ2);
++    Integer64 iDet3 = this->Det3(iD0x,iD0y,iZ0,iD1x,iD1y,iZ1,iD2x,iD2y,iZ2);
+     return (iDet3 < 0 ? 1 : (iDet3 > 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2TInteger.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2TInteger.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2TInteger.inl	2012-05-24 19:42:01.191614365 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2TInteger.inl	2012-05-24 20:20:50.307192529 -0700
+@@ -43,7 +43,7 @@
+     TInteger<2> kX1((int)rkV1[0] - (int)rkV0[0]);
+     TInteger<2> kY1((int)rkV1[1] - (int)rkV0[1]);
+ 
+-    TInteger<2> kDet2 = Det2(kX0,kY0,kX1,kY1);
++    TInteger<2> kDet2 = this->Det2(kX0,kY0,kX1,kY1);
+     return (kDet2 > 0 ? +1 : (kDet2 < 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -75,7 +75,7 @@
+     TInteger<4> kZ0 = kS0x*kD0x + kS0y*kD0y;
+     TInteger<4> kZ1 = kS1x*kD1x + kS1y*kD1y;
+     TInteger<4> kZ2 = kS2x*kD2x + kS2y*kD2y;
+-    TInteger<4> kDet3 = Det3(kD0x,kD0y,kZ0,kD1x,kD1y,kZ1,kD2x,kD2y,kZ2);
++    TInteger<4> kDet3 = this->Det3(kD0x,kD0y,kZ0,kD1x,kD1y,kZ1,kD2x,kD2y,kZ2);
+     return (kDet3 < 0 ? 1 : (kDet3 > 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2TRational.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2TRational.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query2TRational.inl	2012-05-24 19:42:01.190614397 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query2TRational.inl	2012-05-24 20:20:50.307192529 -0700
+@@ -127,7 +127,7 @@
+     Rational kX1 = m_akRVertex[iV1][0] - m_akRVertex[iV0][0];
+     Rational kY1 = m_akRVertex[iV1][1] - m_akRVertex[iV0][1];
+ 
+-    Rational kDet2 = Det2(kX0,kY0,kX1,kY1);
++    Rational kDet2 = this->Det2(kX0,kY0,kX1,kY1);
+     return (kDet2 > 0 ? +1 : (kDet2 < 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -179,7 +179,7 @@
+     Rational kZ0 = kS0x*kD0x + kS0y*kD0y;
+     Rational kZ1 = kS1x*kD1x + kS1y*kD1y;
+     Rational kZ2 = kS2x*kD2x + kS2y*kD2y;
+-    Rational kDet3 = Det3(kD0x,kD0y,kZ0,kD1x,kD1y,kZ1,kD2x,kD2y,kZ2);
++    Rational kDet3 = this->Det3(kD0x,kD0y,kZ0,kD1x,kD1y,kZ1,kD2x,kD2y,kZ2);
+     return (kDet3 < 0 ? 1 : (kDet3 > 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3Filtered.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3Filtered.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3Filtered.inl	2012-05-24 19:42:01.190614397 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3Filtered.inl	2012-05-24 20:21:28.563013748 -0700
+@@ -62,7 +62,7 @@
+     Real fLen2 = Math<Real>::Sqrt(fX2*fX2 + fY2*fY2 + fZ2*fZ2);
+     Real fScaledUncertainty = m_fUncertainty*fLen0*fLen1*fLen2;
+ 
+-    Real fDet3 = Det3(fX0,fY0,fZ0,fX1,fY1,fZ1,fX2,fY2,fZ2);
++    Real fDet3 = this->Det3(fX0,fY0,fZ0,fX1,fY1,fZ1,fX2,fY2,fZ2);
+     if (Math<Real>::FAbs(fDet3) >= fScaledUncertainty)
+     {
+         return (fDet3 > (Real)0.0 ? +1 : (fDet3 < (Real)0.0 ? -1 : 0));
+@@ -115,7 +115,7 @@
+     Real fLen3 = Math<Real>::Sqrt(fD3x*fD3x+fD3y*fD3y+fD3z*fD3z+fW3*fW3);
+     Real fScaledUncertainty = m_fUncertainty*fLen0*fLen1*fLen2*fLen3;
+ 
+-    Real fDet4 = Det4(fD0x,fD0y,fD0z,fW0,fD1x,fD1y,fD1z,fW1,fD2x,
++    Real fDet4 = this->Det4(fD0x,fD0y,fD0z,fW0,fD1x,fD1y,fD1z,fW1,fD2x,
+         fD2y,fD2z,fW2,fD3x,fD3y,fD3z,fW3);
+ 
+     if (Math<Real>::FAbs(fDet4) >= fScaledUncertainty)
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3.inl	2012-05-24 19:42:01.193614301 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3.inl	2012-05-24 20:21:32.913879668 -0700
+@@ -72,7 +72,7 @@
+     Real fY2 = rkV2[1] - rkV0[1];
+     Real fZ2 = rkV2[2] - rkV0[2];
+ 
+-    Real fDet3 = Det3(fX0,fY0,fZ0,fX1,fY1,fZ1,fX2,fY2,fZ2);
++    Real fDet3 = this->Det3(fX0,fY0,fZ0,fX1,fY1,fZ1,fX2,fY2,fZ2);
+     return (fDet3 > (Real)0.0 ? +1 : (fDet3 < (Real)0.0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -158,7 +158,7 @@
+     Real fW1 = fS1x*fD1x + fS1y*fD1y + fS1z*fD1z;
+     Real fW2 = fS2x*fD2x + fS2y*fD2y + fS2z*fD2z;
+     Real fW3 = fS3x*fD3x + fS3y*fD3y + fS3z*fD3z;
+-    Real fDet4 = Det4(fD0x,fD0y,fD0z,fW0,fD1x,fD1y,fD1z,fW1,fD2x,
++    Real fDet4 = this->Det4(fD0x,fD0y,fD0z,fW0,fD1x,fD1y,fD1z,fW1,fD2x,
+         fD2y,fD2z,fW2,fD3x,fD3y,fD3z,fW3);
+ 
+     return (fDet4 > (Real)0.0 ? 1 : (fDet4 < (Real)0.0 ? -1 : 0));
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3Int64.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3Int64.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3Int64.inl	2012-05-24 19:42:01.189614429 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3Int64.inl	2012-05-24 20:21:36.845758502 -0700
+@@ -48,7 +48,7 @@
+     Integer64 iY2 = (Integer64)rkV2[1] - (Integer64)rkV0[1];
+     Integer64 iZ2 = (Integer64)rkV2[2] - (Integer64)rkV0[2];
+ 
+-    Integer64 iDet3 = Det3(iX0,iY0,iZ0,iX1,iY1,iZ1,iX2,iY2,iZ2);
++    Integer64 iDet3 = this->Det3(iX0,iY0,iZ0,iX1,iY1,iZ1,iX2,iY2,iZ2);
+     return (iDet3 > 0 ? +1 : (iDet3 < 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -100,7 +100,7 @@
+     Integer64 iW1 = iS1x*iD1x + iS1y*iD1y + iS1z*iD1z;
+     Integer64 iW2 = iS2x*iD2x + iS2y*iD2y + iS2z*iD2z;
+     Integer64 iW3 = iS3x*iD3x + iS3y*iD3y + iS3z*iD3z;
+-    Integer64 iDet4 = Det4(iD0x,iD0y,iD0z,iW0,iD1x,iD1y,iD1z,iW1,iD2x,
++    Integer64 iDet4 = this->Det4(iD0x,iD0y,iD0z,iW0,iD1x,iD1y,iD1z,iW1,iD2x,
+         iD2y,iD2z,iW2,iD3x,iD3y,iD3z,iW3);
+ 
+     return (iDet4 > 0 ? 1 : (iDet4 < 0 ? -1 : 0));
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3TInteger.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3TInteger.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3TInteger.inl	2012-05-24 19:42:01.192614333 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3TInteger.inl	2012-05-24 20:21:48.905386855 -0700
+@@ -49,7 +49,7 @@
+     TInteger<4> kY2((int)rkV2[1] - (int)rkV0[1]);
+     TInteger<4> kZ2((int)rkV2[2] - (int)rkV0[2]);
+ 
+-    TInteger<4> kDet3 = Det3(kX0,kY0,kZ0,kX1,kY1,kZ1,kX2,kY2,kZ2);
++    TInteger<4> kDet3 = this->Det3(kX0,kY0,kZ0,kX1,kY1,kZ1,kX2,kY2,kZ2);
+     return (kDet3 > 0 ? +1 : (kDet3 < 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -96,7 +96,7 @@
+     TInteger<6> kW1 = kS1x*kD1x + kS1y*kD1y + kS1z*kD1z;
+     TInteger<6> kW2 = kS2x*kD2x + kS2y*kD2y + kS2z*kD2z;
+     TInteger<6> kW3 = kS3x*kD3x + kS3y*kD3y + kS3z*kD3z;
+-    TInteger<6> kDet4 = Det4(kD0x,kD0y,kD0z,kW0,kD1x,kD1y,kD1z,kW1,kD2x,kD2y,
++    TInteger<6> kDet4 = this->Det4(kD0x,kD0y,kD0z,kW0,kD1x,kD1y,kD1z,kW1,kD2x,kD2y,
+         kD2z,kW2,kD3x,kD3y,kD3z,kW3);
+ 
+     return (kDet4 > 0 ? 1 : (kDet4 < 0 ? -1 : 0));
+diff -Naur FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3TRational.inl FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3TRational.inl
+--- FreeCAD-0.12.5284.orig/src/Mod/Mesh/App/WildMagic4/Wm4Query3TRational.inl	2012-05-24 19:42:01.189614429 -0700
++++ FreeCAD-0.12.5284/src/Mod/Mesh/App/WildMagic4/Wm4Query3TRational.inl	2012-05-24 20:21:41.135626300 -0700
+@@ -136,7 +136,7 @@
+     Rational kY2 = m_akRVertex[iV2][1] - m_akRVertex[iV0][1];
+     Rational kZ2 = m_akRVertex[iV2][2] - m_akRVertex[iV0][2];
+ 
+-    Rational kDet3 = Det3(kX0,kY0,kZ0,kX1,kY1,kZ1,kX2,kY2,kZ2);
++    Rational kDet3 = this->Det3(kX0,kY0,kZ0,kX1,kY1,kZ1,kX2,kY2,kZ2);
+     return (kDet3 > 0 ? +1 : (kDet3 < 0 ? -1 : 0));
+ }
+ //----------------------------------------------------------------------------
+@@ -208,7 +208,7 @@
+     Rational kW1 = kS1x*kD1x + kS1y*kD1y + kS1z*kD1z;
+     Rational kW2 = kS2x*kD2x + kS2y*kD2y + kS2z*kD2z;
+     Rational kW3 = kS3x*kD3x + kS3y*kD3y + kS3z*kD3z;
+-    Rational kDet4 = Det4(kD0x,kD0y,kD0z,kW0,kD1x,kD1y,kD1z,kW1,kD2x,
++    Rational kDet4 = this->Det4(kD0x,kD0y,kD0z,kW0,kD1x,kD1y,kD1z,kW1,kD2x,
+         kD2y,kD2z,kW2,kD3x,kD3y,kD3z,kW3);
+ 
+     return (kDet4 > 0 ? 1 : (kDet4 < 0 ? -1 : 0));
