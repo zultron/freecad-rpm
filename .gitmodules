@@ -1,0 +1,3 @@
+[submodule "freecad-dev"]
+	path = freecad-dev
+	url = git://free-cad.git.sourceforge.net/gitroot/free-cad/free-cad
