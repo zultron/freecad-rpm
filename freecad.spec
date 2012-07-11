@@ -125,7 +125,7 @@ End user documentation for FreeCAD
 %patch3 -p1 -b .OCC
 # Remove bundled pycxx if we're not using it
 %if ! %{bundled_pycxx}
-#%patch4 -p1 -b .pycxx
+%patch4 -p1 -b .pycxx
 rm -rf src/CXX
 %endif
 
@@ -260,8 +260,13 @@ fi
 
 
 %changelog
-* Wed Jul 11 2012  <john@zultron.com> - 0.13-0.1.20120711git48243d6
+* Wed Jul 11 2012  <john@zultron.com> - 0.13-0.1
 - Begin preparing -bleeding package; update to 0.13-0.1.git
+- Remove patches and bits of patches accepted upstream
+- Fix patches to apply against HEAD
+- Renumber patches
+- Add git_rev macros in specfile
+- New tarball
 
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-6
 - Filter out automatically generated Provides/Requires of private libraries
