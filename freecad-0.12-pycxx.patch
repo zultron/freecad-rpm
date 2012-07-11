@@ -6,24 +6,23 @@ line:
 cmake -DPYCXX_INCLUDE_DIR=/usr/include/python2.7 \
    -DPYCXX_SOURCE_DIR=/usr/share/python2.7/CXX
 
-diff -ruN FreeCAD-0.12.5284.orig/CMakeLists.txt FreeCAD-0.12.5284/CMakeLists.txt
---- FreeCAD-0.12.5284.orig/CMakeLists.txt	2012-06-25 01:32:19.000000000 -0500
-+++ FreeCAD-0.12.5284/CMakeLists.txt	2012-06-25 01:30:48.000000000 -0500
-@@ -86,6 +86,13 @@
- SET(RESOURCEDIR "${CMAKE_INSTALL_PREFIX}/data" CACHE PATH "Absolute path to the data directory.")
- SET(DOCDIR "" CACHE PATH "Absolute path to the documentation directory.")
- OPTION(USE_EXTERNAL_ZIPIOS "Use system installed zipios++ instead of the bundled." OFF)
+diff -up freecad-0.13.20120711git48243d6/CMakeLists.txt.pycxx freecad-0.13.20120711git48243d6/CMakeLists.txt
+--- freecad-0.13.20120711git48243d6/CMakeLists.txt.pycxx	2012-07-11 03:59:18.000000000 -0500
++++ freecad-0.13.20120711git48243d6/CMakeLists.txt	2012-07-11 04:09:04.000000000 -0500
+@@ -103,6 +103,12 @@ OPTION(FREECAD_BUILD_SANDBOX "Build the
+ OPTION(FREECAD_BUILD_TEMPLATE "Build the FreeCAD template module which is only for testing purposes" OFF)
+ OPTION(FREECAD_BUILD_DEBIAN "Prepare for a build of a Debian package" OFF)
+ OPTION(FREECAD_USE_EXTERNAL_ZIPIOS "Use system installed zipios++ instead of the bundled." OFF)
 +SET(PYCXX_INCLUDE_DIR
 +    "${CMAKE_CURRENT_LIST_DIR}/src" CACHE PATH
 +    "Path to the directory containing PyCXX's CXX/Config.hxx include file")
 +SET(PYCXX_SOURCE_DIR
 +    "${CMAKE_CURRENT_LIST_DIR}/src/CXX" CACHE PATH
 +    "Path to the directory containing PyCXX's cxxextensions.c source file")
-+
- 
- # ==============================================================================
- 
-@@ -158,6 +165,11 @@
+ OPTION(FREECAD_USE_EXTERNAL_PIVY "Use system installed python-pivy instead of the bundled." OFF)
+ if(MSVC)
+ OPTION(FREECAD_USE_3DCONNEXION "Use the 3D connexion SDK to support 3d mouse." ON)
+@@ -195,6 +201,11 @@ MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK_C
  
      find_package(ZLIB REQUIRED)
  
@@ -35,9 +34,9 @@ diff -ruN FreeCAD-0.12.5284.orig/CMakeLists.txt FreeCAD-0.12.5284/CMakeLists.txt
  # -------------------------------- OpenCasCade --------------------------------
  
  #first, look for OpenCASCADE Community Edition (OCE)
-diff -ruN FreeCAD-0.12.5284.orig/cMake/FindPyCXX.cmake FreeCAD-0.12.5284/cMake/FindPyCXX.cmake
---- FreeCAD-0.12.5284.orig/cMake/FindPyCXX.cmake	1969-12-31 18:00:00.000000000 -0600
-+++ FreeCAD-0.12.5284/cMake/FindPyCXX.cmake	2012-06-25 01:30:25.000000000 -0500
+diff -up freecad-0.13.20120711git48243d6/cMake/FindPyCXX.cmake.pycxx freecad-0.13.20120711git48243d6/cMake/FindPyCXX.cmake
+--- freecad-0.13.20120711git48243d6/cMake/FindPyCXX.cmake.pycxx	2012-07-11 04:07:04.000000000 -0500
++++ freecad-0.13.20120711git48243d6/cMake/FindPyCXX.cmake	2012-07-11 04:07:04.000000000 -0500
 @@ -0,0 +1,107 @@
 +# Locate PyCXX headers and source files
 +
@@ -146,12 +145,12 @@ diff -ruN FreeCAD-0.12.5284.orig/cMake/FindPyCXX.cmake FreeCAD-0.12.5284/cMake/F
 +else(PYCXX_FOUND)
 +    MESSAGE(STATUS "PyCXX not found")
 +endif(PYCXX_FOUND)
-diff -ruN FreeCAD-0.12.5284.orig/src/Base/CMakeLists.txt FreeCAD-0.12.5284/src/Base/CMakeLists.txt
---- FreeCAD-0.12.5284.orig/src/Base/CMakeLists.txt	2012-06-25 01:32:18.000000000 -0500
-+++ FreeCAD-0.12.5284/src/Base/CMakeLists.txt	2012-06-25 01:31:09.000000000 -0500
-@@ -121,21 +121,6 @@
- )
+diff -up freecad-0.13.20120711git48243d6/src/Base/CMakeLists.txt.pycxx freecad-0.13.20120711git48243d6/src/Base/CMakeLists.txt
+--- freecad-0.13.20120711git48243d6/src/Base/CMakeLists.txt.pycxx	2012-07-10 19:18:19.000000000 -0500
++++ freecad-0.13.20120711git48243d6/src/Base/CMakeLists.txt	2012-07-11 04:07:04.000000000 -0500
+@@ -124,21 +124,6 @@ SET(zipios_SRCS
  SOURCE_GROUP("zipios" FILES ${zipios_SRCS})
+ endif ()
  
 -SET(pycxx_SRCS
 -    ../CXX/Config.hxx
@@ -169,9 +168,9 @@ diff -ruN FreeCAD-0.12.5284.orig/src/Base/CMakeLists.txt FreeCAD-0.12.5284/src/B
 -SOURCE_GROUP("pycxx" FILES ${pycxx_SRCS})
 -
  SET(FreeCADBase_XML_SRCS
+     AxisPy.xml
      BaseClassPy.xml
-     BoundBoxPy.xml
-@@ -269,7 +254,6 @@
+@@ -276,7 +261,6 @@ SET(FreeCADBase_HPP_SRCS
  )
  
  SET(FreeCADBase_SRCS
@@ -179,8 +178,8 @@ diff -ruN FreeCAD-0.12.5284.orig/src/Base/CMakeLists.txt FreeCAD-0.12.5284/src/B
      ${FreeCADBase_CPP_SRCS}
      ${FreeCADBase_HPP_SRCS}
      ${FreeCADBase_XML_SRCS}
-@@ -301,6 +285,11 @@
- endif(USE_EXTERNAL_ZIPIOS)
+@@ -308,6 +292,11 @@ else(FREECAD_USE_EXTERNAL_ZIPIOS)
+ endif(FREECAD_USE_EXTERNAL_ZIPIOS)
  
  
 +include_directories(${PYCXX_INCLUDE_DIR})
