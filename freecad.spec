@@ -2,8 +2,8 @@
 # List plugins in %%{_libdir}/freecad/lib, less '.so' and 'Gui.so', here
 %define plugins Complete Drawing Fem FreeCAD Image Import Inspection Mesh MeshPart Part PartDesign Points QtUnit Raytracing ReverseEngineering Robot Sketcher Start Web
 
-# This revision is 0.12 final.
-%global svnrev 5284
+# This is a pre-release from git
+%global git_rev .20120711git48243d6
 
 # Some configuration options for other environments
 # rpmbuild --with=occ:  Compile using OpenCASCADE instead of OCE
@@ -17,8 +17,8 @@
 
 
 Name:           freecad
-Version:        0.12
-Release:        6%{?dist}
+Version:        0.13
+Release:        0.1%{?git_release}%{?dist}
 Summary:        A general purpose 3D CAD modeler
 Group:          Applications/Engineering
 
@@ -26,30 +26,20 @@ Group:          Applications/Engineering
 # on OCE which is considered non-free.
 License:        GPLv3+ with exception
 URL:            http://sourceforge.net/apps/mediawiki/free-cad/
-Source0:        http://downloads.sourceforge.net/free-cad/%{name}-%{version}.%{svnrev}.tar.gz
+Source0:        http://downloads.sourceforge.net/free-cad/%{name}-%{version}%{?git_rev}.tar.gz
 Source101:      freecad.desktop
 Source102:      freecad.1
 
-# Patches 0 & 2 accepted upstream.
-# https://sourceforge.net/apps/mantisbt/free-cad/view.php?id=519
-# Fix a bunch of rpath issues and other tweaks.
-Patch0:         freecad-system_inst.patch
 # Remove bundled libs from cmake configuration.
-Patch1:         freecad-3rdParty.patch
-# Fix incomplete cmake config.
-Patch2:         freecad-StartPage.patch
-# Fixed in svn
-Patch3:         freecad-glu.patch
+Patch0:         freecad-3rdParty.patch
 # Disable unfinished modules.
-Patch4:         freecad-cmake_Mod_fix.patch
-# Unbundle zipios++
-Patch5:         freecad-0.12-zipios.patch
+Patch1:         freecad-cmake_Mod_fix.patch
 # Patch for gcc 4.7
-Patch6:         freecad-gcc-4.7.patch
+Patch2:         freecad-gcc-4.7.patch
 # Add build option for OpenCASCADE
-Patch7:         freecad-0.12-OpenCASCADE-option.patch
+Patch3:         freecad-0.13-OpenCASCADE-option.patch
 # Unbundle PyCXX
-Patch8:         freecad-0.12-pycxx.patch
+Patch4:         freecad-0.13-pycxx.patch
 
 
 # Utilities
@@ -127,19 +117,15 @@ End user documentation for FreeCAD
 
 
 %prep
-%setup -q -n FreeCAD-%{version}.%{svnrev}
+%setup -q -n freecad-%{version}%{git_rev}
 
-%patch0 -p1 -b .sysinst
-%patch1 -p1 -b .3rdparty
-%patch2 -p1 -b .startpage
-%patch3 -p1 -b .glufix
-%patch4 -p1 -b .modfix
-%patch5 -p1 -b .zipios
-%patch6 -p1 -b .gcc47
-%patch7 -p1 -b .OCC
+%patch0 -p1 -b .3rdparty
+%patch1 -p1 -b .modfix
+%patch2 -p1 -b .gcc47
+%patch3 -p1 -b .OCC
 # Remove bundled pycxx if we're not using it
 %if ! %{bundled_pycxx}
-%patch8 -p1 -b .pycxx
+#%patch4 -p1 -b .pycxx
 rm -rf src/CXX
 %endif
 
@@ -274,6 +260,9 @@ fi
 
 
 %changelog
+* Wed Jul 11 2012  <john@zultron.com> - 0.13-0.1.20120711git48243d6
+- Begin preparing -bleeding package; update to 0.13-0.1.git
+
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-6
 - Filter out automatically generated Provides/Requires of private libraries
 - freecad.desktop not passing 'desktop-file-validate'; fixed

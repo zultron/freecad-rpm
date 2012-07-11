@@ -1,6 +1,7 @@
---- FreeCAD-0.12.5284.orig/CMakeLists.txt	2012-06-24 01:14:02.000000000 -0500
-+++ FreeCAD-0.12.5284/CMakeLists.txt	2012-06-24 01:18:52.000000000 -0500
-@@ -163,15 +163,20 @@
+diff -up freecad-0.13.20120711git48243d6/CMakeLists.txt.occ freecad-0.13.20120711git48243d6/CMakeLists.txt
+--- freecad-0.13.20120711git48243d6/CMakeLists.txt.occ	2012-07-10 19:18:19.000000000 -0500
++++ freecad-0.13.20120711git48243d6/CMakeLists.txt	2012-07-11 03:59:18.000000000 -0500
+@@ -200,15 +200,20 @@ MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK_C
  #first, look for OpenCASCADE Community Edition (OCE)
  #if OCE is installed in a nonstandard location, add -DOCE_DIR=/path/to/dir/containing/OCEConfig.cmake
  # when configuring with cmake, i.e. cmake .. -DOCE_DIR=/usr/share/cmake
@@ -27,4 +28,4 @@
 +	if( ${OCE_FOUND} AND NOT DEFINED USE_OCC )
  		message("-- OpenCASCADE Community Edition has been found.")
  		add_definitions ( -DHAVE_CONFIG_H )
- 		set( OCC_LIBRARIES "TKFillet;TKMesh;TKernel;TKG2d;TKG3d;TKMath;TKIGES;TKSTL;TKShHealing;TKXSBase;TKBool;TKBO;TKBRep;TKTopAlgo;TKGeomAlgo;TKGeomBase;TKOffset;TKPrim;TKSTEP;TKSTEPBase;TKSTEPAttr;TKHLR" ) #lib list copied from FreeCAD's FindOpenCasCade.cmake
+ 		set( OCC_LIBRARIES "TKFeat;TKFillet;TKMesh;TKernel;TKG2d;TKG3d;TKMath;TKIGES;TKSTL;TKShHealing;TKXSBase;TKBool;TKBO;TKBRep;TKTopAlgo;TKGeomAlgo;TKGeomBase;TKOffset;TKPrim;TKSTEP;TKSTEPBase;TKSTEPAttr;TKHLR" ) #lib list copied from FreeCAD's FindOpenCasCade.cmake
