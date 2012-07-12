@@ -201,9 +201,12 @@ ln -sf %{name}.1.gz FreeCAD.1.gz
 ln -sf %{name}.1.gz FreeCADCmd.1.gz
 popd
 
-# Install QT Assistant documentation
+# Install QT Assistant documentation into %%{_docdir}
 mkdir -p %{buildroot}%{_docdir}/%{name}
 install -pm 0644 build/doc/freecad.* %{buildroot}%{_docdir}/%{name}/
+
+# Uninstall QT Assistant documentation from the FreeCAD libdir
+rm -r %{buildroot}%{_libdir}/%{name}/doc
 
 # Bug maintainers to keep %%{plugins} macro up to date.
 #
@@ -260,6 +263,7 @@ fi
 
 
 %changelog
+
 * Thu Jul 12 2012  <john@zultron.com> - 0.13-0.1
 - Begin preparing -bleeding package; update to 0.13-0.1.git
 - Remove patches and bits of patches accepted upstream
@@ -268,6 +272,7 @@ fi
 - Add git_rev macros in specfile
 - Add PartDesign plugin to %%plugins macro
 - Fix some cmake -D definitions that changed upstream
+- Remove documentation installed into /usr/lib/freecad/doc
 - New tarball
 
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-6
