@@ -1,6 +1,7 @@
 # Maintainers:  keep this list of plugins up to date
 # List plugins in %%{_libdir}/freecad/lib, less '.so' and 'Gui.so', here
-%define plugins Complete Drawing Fem FreeCAD Image Import Inspection Mesh MeshPart Part PartDesign Points QtUnit Raytracing ReverseEngineering Robot Sketcher Start Web
+# (omit libFreeCAD*.so as well)
+%define plugins Complete Drawing Fem FreeCAD Image Import Inspection Mesh MeshPart Part Points QtUnit Raytracing ReverseEngineering Robot Sketcher Start Web
 
 # This is a pre-release from git
 %global git_rev .20120711git48243d6
@@ -260,12 +261,13 @@ fi
 
 
 %changelog
-* Wed Jul 11 2012  <john@zultron.com> - 0.13-0.1
+* Thu Jul 12 2012  <john@zultron.com> - 0.13-0.1
 - Begin preparing -bleeding package; update to 0.13-0.1.git
 - Remove patches and bits of patches accepted upstream
 - Fix patches to apply against HEAD
 - Renumber patches
 - Add git_rev macros in specfile
+- Add PartDesign plugin to %%plugins macro
 - New tarball
 
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-6
