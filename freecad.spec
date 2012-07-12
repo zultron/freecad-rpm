@@ -148,7 +148,6 @@ LDFLAGS='-Wl,--as-needed'; export LDFLAGS
        -DRESOURCEDIR=%{_libdir}/freecad \
        -DDOCDIR=%{_docdir}/%{name} \
        -DCOIN3D_INCLUDE_DIR=%{_includedir}/Coin2 \
-       -DCOIN3D_DOC_PATH=%{_datadir}/Coin2/Coin \
  %if %{occ}
        -DUSE_OCC=TRUE \
 %endif
@@ -156,7 +155,7 @@ LDFLAGS='-Wl,--as-needed'; export LDFLAGS
        -DSMESH_INCLUDE_DIR=%{_includedir} \
 %endif
 %if ! %{bundled_zipios}
-       -DUSE_EXTERNAL_ZIPIOS=TRUE \
+       -DFREECAD_USE_EXTERNAL_ZIPIOS=TRUE \
 %endif
 %if ! %{bundled_pycxx}
        -DPYCXX_INCLUDE_DIR=$(pkg-config --variable=includedir PyCXX) \
@@ -268,6 +267,7 @@ fi
 - Renumber patches
 - Add git_rev macros in specfile
 - Add PartDesign plugin to %%plugins macro
+- Fix some cmake -D definitions that changed upstream
 - New tarball
 
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-6
