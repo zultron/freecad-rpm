@@ -4,3 +4,9 @@
 /FreeCAD-[0-9.]*
 # unpacked git archives
 /freecad-[0-9.]*git[0-9]*
+# 'fedpkg local' artifacts
+/.build-*.log
+/freecad-*.src.rpm
+/noarch
+/x86_64
+/i686
