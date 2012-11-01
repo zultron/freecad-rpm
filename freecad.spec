@@ -47,8 +47,6 @@ Patch2:         freecad-0.13-gcc-4.7.patch
 Patch3:         freecad-0.13-OpenCASCADE-option.patch
 # Unbundle PyCXX
 Patch4:         freecad-0.13-pycxx.patch
-# f2c is only needed for smesh, and maybe not even there
-Patch5:         freecad-0.13-rm_f2c.patch
 
 
 # Utilities
@@ -143,7 +141,6 @@ End user documentation for FreeCAD
 %patch4 -p1 -b .pycxx
 rm -rf src/CXX
 %endif
-%patch5 -p1 -b .f2c
 
 # Fix encodings
 dos2unix -k src/Mod/Test/unittestgui.py \
@@ -283,6 +280,7 @@ fi
 - Update to 0.13-20121031gita47b5f9
 - Rename gcc-4.7.patch to include version number; changes partially
   accepted upstream
+- Remove f2c patch; accepted upstream
 - Merge changes from RPMFusion:
 -   Use cmake28 package on el6 (John Morris, 0.12-9)
 -   Remove COIN3D_DOC_PATH cmake def (one less warning during build)
