@@ -12,3 +12,5 @@
 /i686
 # emacs droppings
 /*~
+/\#*
+/.\#*
