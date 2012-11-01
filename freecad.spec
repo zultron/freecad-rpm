@@ -4,7 +4,8 @@
 %define plugins Complete Drawing Fem FreeCAD Image Import Inspection Mesh MeshPart Part Points QtUnit Raytracing ReverseEngineering Robot Sketcher Start Web
 
 # This is a pre-release from git
-%global git_rev .20120711git48243d6
+%global _gitrel    20121031gita47b5f9
+%global _dotgitrel %{?_gitrel:.%{_gitrel}}
 
 # Some configuration options for other environments
 # rpmbuild --with=occ:  Compile using OpenCASCADE instead of OCE
@@ -19,7 +20,7 @@
 
 Name:           freecad
 Version:        0.13
-Release:        0.1%{?git_release}%{?dist}
+Release:        0.2%{?_dotgitrel}%{?dist}
 Summary:        A general purpose 3D CAD modeler
 Group:          Applications/Engineering
 
@@ -27,7 +28,7 @@ Group:          Applications/Engineering
 # on OCE which is considered non-free.
 License:        GPLv3+ with exception
 URL:            http://sourceforge.net/apps/mediawiki/free-cad/
-Source0:        http://downloads.sourceforge.net/free-cad/%{name}-%{version}%{?git_rev}.tar.gz
+Source0:        http://downloads.sourceforge.net/free-cad/%{name}-%{version}%{?_dotgitrel}.tar.gz
 Source101:      freecad.desktop
 Source102:      freecad.1
 
@@ -263,6 +264,8 @@ fi
 
 
 %changelog
+* Thu Nov  1 2012 John Morris <john@zultron.com> - 0.13-0.2.20121031gita47b5f9
+- Update to 0.13-20121031gita47b5f9
 
 * Thu Jul 12 2012  <john@zultron.com> - 0.13-0.1
 - Begin preparing -bleeding package; update to 0.13-0.1.git
