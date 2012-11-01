@@ -42,7 +42,7 @@ Patch0:         freecad-3rdParty.patch
 # Disable unfinished modules.
 Patch1:         freecad-cmake_Mod_fix.patch
 # Patch for gcc 4.7
-Patch2:         freecad-gcc-4.7.patch
+Patch2:         freecad-0.13-gcc-4.7.patch
 # Add build option for OpenCASCADE
 Patch3:         freecad-0.13-OpenCASCADE-option.patch
 # Unbundle PyCXX
