@@ -1,0 +1,16 @@
+diff -Naur FreeCAD-0.12.5284.orig/CMakeLists.txt FreeCAD-0.12.5284/CMakeLists.txt
+--- FreeCAD-0.12.5284.orig/CMakeLists.txt	2012-07-05 08:47:37.921080779 -0500
++++ FreeCAD-0.12.5284/CMakeLists.txt	2012-07-05 15:28:53.615339177 -0500
+@@ -204,12 +204,6 @@
+ 		ENDIF()
+ 	endif()
+ 
+-# -------------------------------- f2c ----------------------------------
+-
+-    IF(OCC_FOUND)
+-        find_package(F2C REQUIRED)
+-    ENDIF(OCC_FOUND)
+-	
+ # -------------------------------- Salome SMESH --------------------------
+ 
+     # Salome SMESH sources are under src/3rdParty now

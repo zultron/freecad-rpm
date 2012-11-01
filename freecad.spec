@@ -1,21 +1,26 @@
 # Maintainers:  keep this list of plugins up to date
 # List plugins in %%{_libdir}/freecad/lib, less '.so' and 'Gui.so', here
-# (omit libFreeCAD*.so as well)
-%define plugins Complete Drawing Fem FreeCAD Image Import Inspection Mesh MeshPart Part Points QtUnit Raytracing ReverseEngineering Robot Sketcher Start Web
+# Do not list libFreeCAD*.so; these are not plugins
+%global plugins Complete Drawing Fem FreeCAD Image Import Inspection Mesh MeshPart Part Points QtUnit Raytracing ReverseEngineering Robot Sketcher Start Web
 
 # This is a pre-release from git
 %global _gitrel    20121031gita47b5f9
 %global _dotgitrel %{?_gitrel:.%{_gitrel}}
 
+# Use updated cmake package on EL builds.
+%if 0%{?rhel}
+%global cmake %cmake28 -DBoost_NO_BOOST_CMAKE=ON
+%endif
+
 # Some configuration options for other environments
 # rpmbuild --with=occ:  Compile using OpenCASCADE instead of OCE
-%define occ %{?_with_occ: 1} %{?!_with_occ: 0}
+%global occ %{?_with_occ: 1} %{?!_with_occ: 0}
 # rpmbuild --with=bundled_zipios:  use bundled version of zipios++
-%define bundled_zipios %{?_with_bundled_zipios: 1} %{?!_with_bundled_zipios: 0}
+%global bundled_zipios %{?_with_bundled_zipios: 1} %{?!_with_bundled_zipios: 0}
 # rpmbuild --with=bundled_pycxx:  use bundled version of pycxx
-%define bundled_pycxx %{?_with_bundled_pycxx: 1} %{?!_with_bundled_pycxx: 0}
+%global bundled_pycxx %{?_with_bundled_pycxx: 1} %{?!_with_bundled_pycxx: 0}
 # rpmbuild --with=bundled_smesh:  use bundled version of Salome's Mesh
-%define bundled_smesh %{?_with_bundled_smesh: 1} %{?!_with_bundled_smesh: 0}
+%global bundled_smesh %{?_with_bundled_smesh: 1} %{?!_with_bundled_smesh: 0}
 
 
 Name:           freecad
@@ -42,17 +47,24 @@ Patch2:         freecad-gcc-4.7.patch
 Patch3:         freecad-0.13-OpenCASCADE-option.patch
 # Unbundle PyCXX
 Patch4:         freecad-0.13-pycxx.patch
+# f2c is only needed for smesh, and maybe not even there
+Patch5:         freecad-0.13-rm_f2c.patch
 
 
 # Utilities
-BuildRequires:  cmake doxygen swig
+%if (0%{?rhel} == 6)
+BuildRequires:  cmake28
+%else
+BuildRequires:  cmake
+%endif
+BuildRequires:  doxygen graphviz swig
 BuildRequires:  gcc-gfortran
 BuildRequires:  gettext
 BuildRequires:  dos2unix
 BuildRequires:  desktop-file-utils
 # Development Libraries
-BuildRequires:  libXmu-devel
 BuildRequires:  freeimage-devel
+BuildRequires:  libXmu-devel
 BuildRequires:  mesa-libGLU-devel
 %if %{occ}
 BuildRequires:  OpenCASCADE-devel
@@ -63,16 +75,16 @@ BuildRequires:  OCE-devel
 # https://bugzilla.redhat.com/show_bug.cgi?id=665733
 #BuildRequires:  Coin3-devel
 BuildRequires:  Coin2-devel
-BuildRequires:  python python-devel
+BuildRequires:  python-devel
 BuildRequires:  boost-devel
 BuildRequires:  eigen3-devel
-BuildRequires:  f2c f2c-libs
 BuildRequires:  qt-devel qt-webkit-devel
 BuildRequires:  SoQt-devel
-BuildRequires:  ode-devel
+# Not used yet.
+#BuildRequires:  ode-devel
 BuildRequires:  xerces-c xerces-c-devel
 BuildRequires:  libspnav-devel
-BuildRequires:  opencv-devel
+#BuildRequires:  opencv-devel
 %if ! %{bundled_smesh}
 BuildRequires:  smesh-devel
 %endif
@@ -85,6 +97,7 @@ BuildRequires:  python-pycxx-devel
 
 # Needed for plugin support and is not a soname dependency.
 Requires:       python-pivy
+Requires:       PyQt4
 Requires:       hicolor-icon-theme
 
 # plugins and private shared libs in %%{_libdir}/freecad/lib are private;
@@ -119,7 +132,7 @@ End user documentation for FreeCAD
 
 
 %prep
-%setup -q -n freecad-%{version}
+%setup -q -n FreeCAD-%{version}.%{svnrev}
 
 %patch0 -p1 -b .3rdparty
 %patch1 -p1 -b .modfix
@@ -130,6 +143,7 @@ End user documentation for FreeCAD
 %patch4 -p1 -b .pycxx
 rm -rf src/CXX
 %endif
+%patch5 -p1 -b .f2c
 
 # Fix encodings
 dos2unix -k src/Mod/Test/unittestgui.py \
@@ -149,7 +163,8 @@ LDFLAGS='-Wl,--as-needed'; export LDFLAGS
        -DRESOURCEDIR=%{_libdir}/freecad \
        -DDOCDIR=%{_docdir}/%{name} \
        -DCOIN3D_INCLUDE_DIR=%{_includedir}/Coin2 \
- %if %{occ}
+       -DCOIN3D_DOC_PATH=%{_datadir}/Coin2/Coin \
+%if %{occ}
        -DUSE_OCC=TRUE \
 %endif
 %if ! %{bundled_smesh}
@@ -182,7 +197,7 @@ popd
 # Fix problems with unittestgui.py
 chmod +x %{buildroot}%{_libdir}/%{name}/Mod/Test/unittestgui.py
 
-# Install desktop file and set library path
+# Install desktop file
 desktop-file-install                                   \
     --dir=%{buildroot}%{_datadir}/applications         \
     %{SOURCE101}
@@ -202,7 +217,7 @@ ln -sf %{name}.1.gz FreeCAD.1.gz
 ln -sf %{name}.1.gz FreeCADCmd.1.gz
 popd
 
-# Install QT Assistant documentation into %%{_docdir}
+# Install QT Assistant documentation
 mkdir -p %{buildroot}%{_docdir}/%{name}
 install -pm 0644 build/doc/freecad.* %{buildroot}%{_docdir}/%{name}/
 
@@ -266,6 +281,16 @@ fi
 %changelog
 * Thu Nov  1 2012 John Morris <john@zultron.com> - 0.13-0.2.20121031gita47b5f9
 - Update to 0.13-20121031gita47b5f9
+- Rename gcc-4.7.patch to include version number; changes partially
+  accepted upstream
+- Merge changes from RPMFusion:
+-   Use cmake28 package on el6 (John Morris, 0.12-9)
+-   Remove COIN3D_DOC_PATH cmake def (one less warning during build)
+    (John Morris, 0.12-9)
+-   Remove BuildRequires: tbb-devel and gts-devel (Richard Shaw, 0.12-7)
+-   Add missing license files to %%doc. (Richard Shaw, 0.12-7)
+-   Add missing requirement for hicolor-icon-theme. (Richard Shaw, 0.12-7)
+-   Fix excessive linking issue. (Richard Shaw, 0.12-7)
 
 * Thu Jul 12 2012  <john@zultron.com> - 0.13-0.1
 - Begin preparing -bleeding package; update to 0.13-0.1.git
@@ -281,7 +306,6 @@ fi
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-6
 - Filter out automatically generated Provides/Requires of private libraries
 - freecad.desktop not passing 'desktop-file-validate'; fixed
-- Remove BuildRequires: tbb-devel and gts-devel
 
 * Mon Jun 25 2012  <john@zultron.com> - 0.12-5
 - New patch to unbundle PyCXX
