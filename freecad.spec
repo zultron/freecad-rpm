@@ -132,7 +132,7 @@ End user documentation for FreeCAD
 
 
 %prep
-%setup -q -n FreeCAD-%{version}.%{svnrev}
+%setup -q -n freecad-%{version}
 
 %patch0 -p1 -b .3rdparty
 %patch1 -p1 -b .modfix
