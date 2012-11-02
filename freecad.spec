@@ -47,7 +47,8 @@ Patch2:         freecad-0.13-gcc-4.7.patch
 Patch3:         freecad-0.13-OpenCASCADE-option.patch
 # Unbundle PyCXX
 Patch4:         freecad-0.13-pycxx.patch
-
+# Fix a compile error in the OpenSCAD module
+Patch5:         freecad-0.13-OpenSCAD_compile_error.patch
 
 # Utilities
 %if (0%{?rhel} == 6)
@@ -142,6 +143,7 @@ End user documentation for FreeCAD
 %patch4 -p1 -b .pycxx
 rm -rf src/CXX
 %endif
+%patch5 -p1 -b .openscad
 
 # Fix encodings
 dos2unix -k src/Mod/Test/unittestgui.py \
@@ -283,6 +285,7 @@ fi
   accepted upstream
 - Require matplotlib (runtime warnings)
 - Remove f2c patch; accepted upstream
+- Add patch to fix OpenSCAD compile error
 - Merge changes from RPMFusion:
 -   Use cmake28 package on el6 (John Morris, 0.12-9)
 -   Remove COIN3D_DOC_PATH cmake def (one less warning during build)
