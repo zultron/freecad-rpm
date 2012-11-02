@@ -25,7 +25,7 @@
 
 Name:           freecad
 Version:        0.13
-Release:        0.2%{?_dotgitrel}%{?dist}
+Release:        0.3%{?_dotgitrel}%{?dist}
 Summary:        A general purpose 3D CAD modeler
 Group:          Applications/Engineering
 
@@ -98,7 +98,7 @@ BuildRequires:  python-pycxx-devel
 Requires:       python-pivy
 Requires:       PyQt4
 Requires:       hicolor-icon-theme
-Requires:       matplotlib
+Requires:       python-matplotlib
 Requires:       pycollada
 
 # plugins and private shared libs in %%{_libdir}/freecad/lib are private;
@@ -280,6 +280,9 @@ fi
 
 
 %changelog
+* Fri Nov  2 2012 John Morris <john@zultron.com> - 0.13-0.3.20121031gita47b5f9
+- Fix mistakes in Requirements
+
 * Thu Nov  1 2012 John Morris <john@zultron.com> - 0.13-0.2.20121031gita47b5f9
 - Update to 0.13-20121031gita47b5f9
 - Rename gcc-4.7.patch to include version number; changes partially
