@@ -99,6 +99,7 @@ Requires:       python-pivy
 Requires:       PyQt4
 Requires:       hicolor-icon-theme
 Requires:       matplotlib
+Requires:       pycollada
 
 # plugins and private shared libs in %%{_libdir}/freecad/lib are private;
 # prevent private capabilities being advertised in Provides/Requires
@@ -283,7 +284,7 @@ fi
 - Update to 0.13-20121031gita47b5f9
 - Rename gcc-4.7.patch to include version number; changes partially
   accepted upstream
-- Require matplotlib (runtime warnings)
+- Require matplotlib and pycollada (runtime warnings)
 - Remove f2c patch; accepted upstream
 - Add patch to fix OpenSCAD compile error
 - Merge changes from RPMFusion:
