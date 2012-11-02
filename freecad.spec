@@ -97,6 +97,7 @@ BuildRequires:  python-pycxx-devel
 Requires:       python-pivy
 Requires:       PyQt4
 Requires:       hicolor-icon-theme
+Requires:       matplotlib
 
 # plugins and private shared libs in %%{_libdir}/freecad/lib are private;
 # prevent private capabilities being advertised in Provides/Requires
@@ -280,6 +281,7 @@ fi
 - Update to 0.13-20121031gita47b5f9
 - Rename gcc-4.7.patch to include version number; changes partially
   accepted upstream
+- Require matplotlib (runtime warnings)
 - Remove f2c patch; accepted upstream
 - Merge changes from RPMFusion:
 -   Use cmake28 package on el6 (John Morris, 0.12-9)
